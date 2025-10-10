@@ -65,7 +65,10 @@ export default function CriarImagemPage() {
       } catch (error) {
         console.error("Erro ao gerar imagem:", error);
       } finally {
-        setLoadingImage(false);
+        setTimeout(() => {
+          
+          setLoadingImage(false);
+        }, 3000);
       }
     }, 3000);
   };
@@ -119,7 +122,7 @@ export default function CriarImagemPage() {
             />
           </>
         )}
-        <p className="text-3xl font-semibold z-10">{frase?.conteudo}</p>
+        <p className="text-3xl font-normal opacity-50 z-10">{frase?.conteudo}</p>
       </div>
 
       <div className="mt-8 w-full max-w-xl space-y-4">
