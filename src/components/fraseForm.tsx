@@ -1,5 +1,6 @@
 "use client";
 
+import { supabase } from "@/lib/supabase";
 import { useState } from "react";
 import { Categoria } from "@/lib/types";
 
@@ -19,6 +20,27 @@ export default function FraseForm() {
     return e;
   };
 
+  const salvarFrase = async () => {
+    const { data, error } = await supabase
+      .from("frases")
+      .insert([
+        {
+          titulo: titulo || null,
+          conteudo,
+          autor: autor || null,
+          categoria,
+        },
+      ]);
+
+    if (error) {
+      console.error("Erro ao salvar frase:", error.message);
+      return false;
+    }
+
+    console.log("Frase salva com sucesso:", data);
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const errosValidacao = validar();
@@ -27,7 +49,18 @@ export default function FraseForm() {
       return;
     }
 
-    // Aqui futuramente vamos enviar ao Supabase
+    // Enviar ao Supabase
+    const sucesso = await salvarFrase();
+    if (sucesso) {
+      alert("Frase salva com sucesso!");
+      setTitulo("");
+      setConteudo("");
+      setAutor("");
+      setCategoria("");
+    } else {
+      alert("Erro ao salvar frase.");
+    }
+
     console.log({ titulo, conteudo, autor, categoria });
     setErros([]);
   };
