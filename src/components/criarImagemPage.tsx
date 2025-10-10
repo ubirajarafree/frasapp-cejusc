@@ -35,7 +35,7 @@ export default function CriarImagemPage() {
     if (!frase?.conteudo) return;
     setLoadingPrompt(true);
     try {
-      const textPrompt = `Com base na frase "${frase.conteudo}", sugira apenas um prompt curto e direto para gerar uma imagem que combine com ela. Evite múltiplas variações ou análises longas.`;
+      const textPrompt = `Com base na frase "${frase.conteudo}", sugira apenas um prompt elaborado de no máximo 4 linhas para gerar uma imagem que combine com ela.`;
 
       const endpoint = `https://text.pollinations.ai/${encodeURIComponent(
         textPrompt
@@ -54,21 +54,22 @@ export default function CriarImagemPage() {
   const gerarImagem = async () => {
     if (!prompt) return;
     setLoadingImage(true);
-    try {
-      const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(
-        prompt
-      )}?enhance=true&nologo=true`;
-      setImagemUrl(url);
-    } catch (error) {
-      console.error("Erro ao gerar imagem:", error);
-    } finally {
-      setLoadingImage(false);
-    }
+    setTimeout(() => {
+      try {
+        const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(
+          prompt
+        )}?enhance=true&nologo=true`;
+        setImagemUrl(url);
+      } catch (error) {
+        console.error("Erro ao gerar imagem:", error);
+      } finally {
+        setLoadingImage(false);
+      }
+    }, 3000);
   };
 
   return (
     <div className="min-h-screen bg-black text-white p-6 flex flex-col items-center">
-      <h1 className="text-2xl font-bold mb-6">Criação de Imagem</h1>
 
       <div className="relative w-[500px] h-[500px] border border-gray-700 rounded-xl shadow-lg flex items-center justify-center text-center p-6">
         {imagemUrl && (
@@ -77,7 +78,7 @@ export default function CriarImagemPage() {
             <img
               src={imagemUrl}
               alt="Imagem gerada"
-              className="absolute inset-0 w-full h-full object-cover rounded-xl opacity-30 z-0"
+              className="absolute inset-0 w-full h-full object-cover rounded-xl opacity-50 z-0"
             />
           </>
         )}
@@ -89,18 +90,15 @@ export default function CriarImagemPage() {
           placeholder="Sugira um prompt para a imagem..."
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
-          className="w-full p-3 rounded bg-gray-900 border border-gray-700 text-white"
-          rows={4}
-          onInput={(e) => {
-            e.currentTarget.style.height = "auto";
-            e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
-          }}
+          className="w-full text-sm p-3 rounded bg-gray-900 border border-gray-700 text-white"
+          rows={8}
+          disabled={loadingPrompt || loadingImage}
         />
 
         <div className="flex gap-2 items-center justify-center">
           <button
             onClick={sugerirPrompt}
-            disabled={loadingPrompt || !frase?.conteudo}
+            disabled={loadingPrompt || !frase?.conteudo || loadingImage || prompt !== ""}
             className={`bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2`}
           >
             {loadingPrompt && <Spinner size={20} color="white" />}
@@ -109,12 +107,22 @@ export default function CriarImagemPage() {
 
           <button
             onClick={gerarImagem}
-            disabled={loadingImage || !prompt}
+            disabled={loadingImage || !prompt || loadingPrompt || imagemUrl !== ""}
             className={`bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2`}
           >
             {loadingImage && <Spinner size={20} color="white" />}
             <span>{loadingImage ? "Gerando..." : "Gerar imagem"}</span>
           </button>
+
+        {imagemUrl && (
+          <button
+            className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded transition"
+            onClick={() => window.history.back()}
+          >
+            Voltar
+          </button>
+        )}
+
         </div>
 
       </div>
