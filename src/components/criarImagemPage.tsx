@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { Frase } from "@/lib/types";
+import Spinner from "./spinner";
 
 export default function CriarImagemPage() {
   const searchParams = useSearchParams();
@@ -11,6 +12,8 @@ export default function CriarImagemPage() {
   const [frase, setFrase] = useState<Frase | null>(null);
   const [prompt, setPrompt] = useState("");
   const [imagemUrl, setImagemUrl] = useState("");
+  const [loadingPrompt, setLoadingPrompt] = useState(false);
+  const [loadingImage, setLoadingImage] = useState(false);
 
   useEffect(() => {
     const fetchFrase = async () => {
@@ -30,22 +33,37 @@ export default function CriarImagemPage() {
 
   const sugerirPrompt = async () => {
     if (!frase?.conteudo) return;
+    setLoadingPrompt(true);
+    try {
+      const textPrompt = `Com base na frase "${frase.conteudo}", sugira apenas um prompt curto e direto para gerar uma imagem que combine com ela. Evite múltiplas variações ou análises longas.`;
 
-    const textPrompt = `Com base na frase "${frase.conteudo}", sugira apenas um prompt curto e direto para gerar uma imagem que combine com ela. Evite múltiplas variações ou análises longas.`;
-    
-    const endpoint = `https://text.pollinations.ai/${encodeURIComponent(textPrompt)}`;
+      const endpoint = `https://text.pollinations.ai/${encodeURIComponent(
+        textPrompt
+      )}`;
 
-    const response = await fetch(endpoint);
-    const texto = await response.text();
-    setPrompt(texto);
+      const response = await fetch(endpoint);
+      const texto = await response.text();
+      setPrompt(texto);
+    } catch (error) {
+      console.error("Erro ao sugerir prompt:", error);
+    } finally {
+      setLoadingPrompt(false);
+    }
   };
 
   const gerarImagem = async () => {
     if (!prompt) return;
-    const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(
-      prompt
-    )}?enhance=true&nologo=true`;
-    setImagemUrl(url);
+    setLoadingImage(true);
+    try {
+      const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(
+        prompt
+      )}?enhance=true&nologo=true`;
+      setImagemUrl(url);
+    } catch (error) {
+      console.error("Erro ao gerar imagem:", error);
+    } finally {
+      setLoadingImage(false);
+    }
   };
 
   return (
@@ -82,16 +100,20 @@ export default function CriarImagemPage() {
         <div className="flex gap-2 items-center justify-center">
           <button
             onClick={sugerirPrompt}
-            className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded transition"
+            disabled={loadingPrompt || !frase?.conteudo}
+            className={`bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2`}
           >
-            Sugerir prompt com IA
+            {loadingPrompt && <Spinner size={20} color="white" />}
+            <span>{loadingPrompt ? "Aguarde..." : "Sugerir prompt com IA"}</span>
           </button>
 
           <button
             onClick={gerarImagem}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded transition"
+            disabled={loadingImage || !prompt}
+            className={`bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2`}
           >
-            Gerar imagem
+            {loadingImage && <Spinner size={20} color="white" />}
+            <span>{loadingImage ? "Gerando..." : "Gerar imagem"}</span>
           </button>
         </div>
 
