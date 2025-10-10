@@ -12,8 +12,10 @@ export default function CriarImagemPage() {
   const [frase, setFrase] = useState<Frase | null>(null);
   const [prompt, setPrompt] = useState("");
   const [imagemUrl, setImagemUrl] = useState("");
+  const [publicUrl, setPublicUrl] = useState("");
   const [loadingPrompt, setLoadingPrompt] = useState(false);
   const [loadingImage, setLoadingImage] = useState(false);
+  const [loadingSalvar, setLoadingSalvar] = useState(false);
 
   useEffect(() => {
     const fetchFrase = async () => {
@@ -68,6 +70,41 @@ export default function CriarImagemPage() {
     }, 3000);
   };
 
+  const salvarImagem = async () => {
+    if (!imagemUrl || !frase?.conteudo || !id) return;
+    setLoadingSalvar(true);
+
+    try {
+      const response = await fetch("/api/gerar-imagem", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          imagemUrl,
+          frase: frase.conteudo,
+          fraseId: id,
+        }),
+      });
+
+      const data = await response.json();
+
+      
+      if (response.ok) {
+        alert("Imagem salva com sucesso!");
+        console.log("URL pública:", data.url);
+        setPublicUrl(data.url);
+      } else {
+        console.error("Erro ao salvar:", data.error);
+        alert("Erro ao salvar imagem.");
+      }
+    } catch (error) {
+      console.error("Erro geral:", error);
+      alert("Erro inesperado.");
+    } finally {
+      setLoadingSalvar(false);
+    }
+  };
+
+
   return (
     <div className="min-h-screen bg-black text-white p-6 flex flex-col items-center">
 
@@ -83,6 +120,16 @@ export default function CriarImagemPage() {
           </>
         )}
         <p className="text-3xl font-semibold z-10">{frase?.conteudo}</p>
+        {publicUrl && (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={publicUrl}
+              alt="Imagem gerada"
+              className="absolute inset-0 w-full h-full object-cover rounded-xl opacity-50 z-20"
+            />
+          </>
+        )}
       </div>
 
       <div className="mt-8 w-full max-w-xl space-y-4">
@@ -95,7 +142,7 @@ export default function CriarImagemPage() {
           disabled={loadingPrompt || loadingImage}
         />
 
-        <div className="flex gap-2 items-center justify-center">
+        <div className="flex gap-2 items-center justify-center flex-wrap">
           <button
             onClick={sugerirPrompt}
             disabled={loadingPrompt || !frase?.conteudo || loadingImage || prompt !== ""}
@@ -114,14 +161,25 @@ export default function CriarImagemPage() {
             <span>{loadingImage ? "Gerando..." : "Gerar imagem"}</span>
           </button>
 
-        {imagemUrl && (
-          <button
-            className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded transition"
-            onClick={() => window.history.back()}
-          >
-            Voltar
-          </button>
-        )}
+          {imagemUrl && (
+            <>
+              <button
+                onClick={salvarImagem}
+                disabled={loadingSalvar || !imagemUrl || !frase?.conteudo || !id}
+                className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                {loadingSalvar && <Spinner size={20} color="white" />}
+                <span>{loadingSalvar ? "Salvando..." : "Salvar imagem"}</span>
+              </button>
+
+              <button
+                className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded transition"
+                onClick={() => window.history.back()}
+              >
+                Voltar
+              </button>
+            </>
+          )}
 
         </div>
 
