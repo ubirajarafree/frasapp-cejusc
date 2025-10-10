@@ -87,7 +87,7 @@ export default function CriarImagemPage() {
 
       const data = await response.json();
 
-      
+
       if (response.ok) {
         alert("Imagem salva com sucesso!");
         console.log("URL pública:", data.url);
@@ -120,16 +120,6 @@ export default function CriarImagemPage() {
           </>
         )}
         <p className="text-3xl font-semibold z-10">{frase?.conteudo}</p>
-        {publicUrl && (
-          <>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={publicUrl}
-              alt="Imagem gerada"
-              className="absolute inset-0 w-full h-full object-cover rounded-xl opacity-50 z-20"
-            />
-          </>
-        )}
       </div>
 
       <div className="mt-8 w-full max-w-xl space-y-4">
@@ -182,7 +172,18 @@ export default function CriarImagemPage() {
           )}
 
         </div>
-
+      </div>
+      <div className="flex mt-4">
+        {publicUrl && (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={publicUrl}
+              alt="Imagem gerada"
+              className="w-full h-full object-cover rounded-xl opacity-50 z-20"
+            />
+          </>
+        )}
       </div>
     </div>
   );

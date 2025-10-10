@@ -20,6 +20,16 @@ export async function POST(req: Request) {
     const width = metadata.width || 1024;
     const height = metadata.height || 1024;
 
+    const linhas = frase.split(" ").reduce((acc: string[], palavra: string) => {
+      const ultima = acc[acc.length - 1];
+      if (!ultima || ultima.length + palavra.length > 30) {
+        acc.push(palavra);
+      } else {
+        acc[acc.length - 1] += " " + palavra;
+      }
+      return acc;
+    }, []);
+
     // 2. Criar SVG com a frase
     const svgText = `
       <svg width="${width}" height="${height}">
@@ -29,10 +39,16 @@ export async function POST(req: Request) {
             fill: white;
             font-family: sans-serif;
             text-anchor: middle;
-            dominant-baseline: middle;
           }
         </style>
-        <text x="50%" y="50%">${frase}</text>
+        <text x="50%" y="50%" dominant-baseline="middle">
+          ${linhas
+            .map(
+              (linha: string[], i: number) =>
+                `<tspan x="50%" dy="${i === 0 ? "0" : "1.2em"}">${linha}</tspan>`
+            )
+            .join("")}
+        </text>
       </svg>
     `;
 
@@ -49,7 +65,9 @@ export async function POST(req: Request) {
 
 
     // 4. Upload para Supabase Storage
-    const filePath = `imagem-${fraseId}.png`;
+    const timestamp = Date.now();
+    const filePath = `imagem-${fraseId}-${timestamp}.png`;
+    
     const { error: uploadError } = await supabase.storage
       .from("Bucket01")
       .upload(filePath, finalImage, {
