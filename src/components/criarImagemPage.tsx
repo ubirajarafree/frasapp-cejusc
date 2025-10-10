@@ -28,6 +28,18 @@ export default function CriarImagemPage() {
     fetchFrase();
   }, [id]);
 
+  const sugerirPrompt = async () => {
+    if (!frase?.conteudo) return;
+
+    const textPrompt = `Com base na frase "${frase.conteudo}", sugira apenas um prompt curto e direto para gerar uma imagem que combine com ela. Evite múltiplas variações ou análises longas.`;
+    
+    const endpoint = `https://text.pollinations.ai/${encodeURIComponent(textPrompt)}`;
+
+    const response = await fetch(endpoint);
+    const texto = await response.text();
+    setPrompt(texto);
+  };
+
   const gerarImagem = async () => {
     if (!prompt) return;
     const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(
@@ -61,14 +73,28 @@ export default function CriarImagemPage() {
           onChange={(e) => setPrompt(e.target.value)}
           className="w-full p-3 rounded bg-gray-900 border border-gray-700 text-white"
           rows={4}
+          onInput={(e) => {
+            e.currentTarget.style.height = "auto";
+            e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
+          }}
         />
 
-        <button
-          onClick={gerarImagem}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded transition"
-        >
-          Gerar imagem
-        </button>
+        <div className="flex gap-2 items-center justify-center">
+          <button
+            onClick={sugerirPrompt}
+            className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded transition"
+          >
+            Sugerir prompt com IA
+          </button>
+
+          <button
+            onClick={gerarImagem}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded transition"
+          >
+            Gerar imagem
+          </button>
+        </div>
+
       </div>
     </div>
   );
