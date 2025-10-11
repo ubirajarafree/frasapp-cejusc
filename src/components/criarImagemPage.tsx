@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Loader2, Wand2, Image as ImageIcon, Save, ArrowLeft } from "lucide-react";
+import { Loader2, Wand2, Image as ImageIcon, Save, ArrowLeft, Download } from "lucide-react";
 import { Toaster, toast } from "sonner";
 
 export default function CriarImagemPage() {
@@ -34,7 +34,7 @@ export default function CriarImagemPage() {
       if (error) {
         console.error("Erro ao buscar frase:", error.message);
         toast.error("Não foi possível carregar a frase.");
-      } else 
+      } else
         setFrase(data);
     };
 
@@ -96,7 +96,7 @@ export default function CriarImagemPage() {
 
 
       if (response.ok) {
-        toast.success("Sua imagem foi salva com sucesso no nosso banco de dados.");
+        toast.success("Sua imagem final foi gerada com sucesso.");
         console.log("URL pública:", data.url);
         setPublicUrl(data.url);
       } else {
@@ -108,6 +108,30 @@ export default function CriarImagemPage() {
       toast.error("Ocorreu um erro de rede.");
     } finally {
       setLoadingSalvar(false);
+    }
+  };
+
+  const handleDownload = async () => {
+    if (!publicUrl) return;
+
+    try {
+      const response = await fetch(publicUrl);
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+      link.href = url;
+      //link.download = 'frasapp-imagem.png'; // Nome do arquivo
+      //link.download = `${frase?.conteudo.slice(0, 20)}.png`;
+      link.download = `${frase?.conteudo}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      toast.success("Download iniciado!");
+    } catch (error) {
+      console.error("Erro ao baixar imagem:", error);
+      toast.error("Não foi possível baixar a imagem.");
     }
   };
 
@@ -164,16 +188,28 @@ export default function CriarImagemPage() {
               <AccordionItem value="item-3" disabled={!imagemUrl}>
                 <AccordionTrigger>Passo 3: Gere a imagem com a frase</AccordionTrigger>
                 <AccordionContent>
-                  <Button onClick={salvarImagem} disabled={loadingSalvar || !!publicUrl} variant="secondary">
+                  <Button onClick={salvarImagem} disabled={loadingSalvar || !!publicUrl} variant="default">
                     {loadingSalvar ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
-                    Salvar Imagem
+                    Combinar Imagem + Frase
                   </Button>
                   {publicUrl && (
-                    <img
-                      src={publicUrl}
-                      alt="Imagem gerada com o texto escolhido"
-                      className="mt-4 border rounded shadow"
-                    />
+                    <div className="relative mt-4">
+                      <img
+                        src={publicUrl}
+                        alt="Imagem gerada com o texto escolhido"
+                        className="border rounded shadow"
+                      />
+                      <Button
+                        variant="default"
+                        className="absolute top-2 right-2 bg-black text-white hover:bg-gray-900 shadow-lg flex items-center gap-3"
+                        style={{ zIndex: 30 }}
+                        onClick={handleDownload}
+                      >
+                        Baixar
+                        <Download className="h-5 w-5" />
+                      </Button>
+
+                    </div>
                   )}
                 </AccordionContent>
               </AccordionItem>
