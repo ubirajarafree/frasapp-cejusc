@@ -1,7 +1,11 @@
 import FraseForm from "@/components/fraseForm";
+import { PageHeaderWithBreadcrumb } from "@/components/pageHeaderWithBreadcrumb";
 
 export default function NovaFrase() {
   return (
-    <FraseForm />
+    <>
+      <PageHeaderWithBreadcrumb segments={[{ label: "Nova frase" }]} />
+      <FraseForm />
+    </>
   );
 }

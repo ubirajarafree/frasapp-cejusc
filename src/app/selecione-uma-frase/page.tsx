@@ -1,7 +1,11 @@
 import FraseGallery from "@/components/fraseGallery";
+import { PageHeaderWithBreadcrumb } from "@/components/pageHeaderWithBreadcrumb";
 
 export default function SelecioneUmaFrase() {
   return (
-    <FraseGallery />
+    <>
+      <PageHeaderWithBreadcrumb segments={[{ label: "Selecione uma frase" }]} />
+      <FraseGallery />
+    </>
   );
 }
