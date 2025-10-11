@@ -34,6 +34,7 @@ export function Header() {
                 Menu de Navegação
               </SheetTitle>
               <nav className="grid gap-6 text-lg font-medium mt-8 ml-4">
+                <Link href="/" className="hover:text-foreground/80">Home</Link>
                 <Link href="/selecione-uma-frase" className="hover:text-foreground/80">Frases</Link>
                 <Link href="/nova-frase" className="hover:text-foreground/80">Nova Frase</Link>
               </nav>
