@@ -4,7 +4,10 @@ import { PageHeaderWithBreadcrumb } from "@/components/pageHeaderWithBreadcrumb"
 export default function SelecioneUmaFrase() {
   return (
     <>
-      <PageHeaderWithBreadcrumb segments={[{ label: "Selecione uma frase" }]} />
+      <PageHeaderWithBreadcrumb segments={[
+        { label: "Nova frase", href: "/nova-frase" },
+        { label: "Selecione uma frase" },
+        ]} />
       <FraseGallery />
     </>
   );
