@@ -45,7 +45,7 @@ export default function CriarImagemPage() {
     if (!frase?.conteudo) return;
     setLoadingPrompt(true);
     try {
-      const textPrompt = `Baseado na frase "${frase.conteudo}", sugira um prompt em inglês, detalhado e artístico para gerar uma imagem. O prompt deve ter no máximo 4 linhas e focar em um estilo visual específico (ex: "cinematic, 4k, photorealistic, vibrant colors"). Retorne apenas o prompt.`;
+      const textPrompt = `Baseado na frase "${frase.conteudo}", sugira um prompt em português, detalhado e artístico para gerar uma imagem. O prompt deve ter no máximo 4 linhas e focar em um estilo visual específico (ex: "cinematic, 4k, photorealistic, vibrant colors"). Retorne apenas o prompt.`;
 
       const endpoint = `https://text.pollinations.ai/${encodeURIComponent(
         textPrompt
