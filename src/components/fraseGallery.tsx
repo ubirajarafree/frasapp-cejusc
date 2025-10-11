@@ -5,21 +5,27 @@ import { useRouter } from "next/navigation";
 import { Frase } from "@/lib/types";
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 
 export default function FraseGallery() {
   const [frases, setFrases] = useState<Frase[]>([]);
   const [fraseSelecionada, setFraseSelecionada] = useState<Frase | null>(null);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
+    setLoading(true);
     const fetchFrases = async () => {
       const { data, error } = await supabase
         .from("frases")
         .select("*")
         .order("created_at", { ascending: false });
 
-      if (error) console.error("Erro ao buscar frases:", error.message);
-      else setFrases(data || []);
+      if (error) {console.error("Erro ao buscar frases:", error.message);}
+      else {
+        setFrases(data || []);
+        setLoading(false);
+      }
     };
 
     fetchFrases();
@@ -28,6 +34,15 @@ export default function FraseGallery() {
   const handleSelecionar = (frase: Frase) => {
     setFraseSelecionada((prev) => (prev?.id === frase.id ? null : frase));
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
 
   return (
     <div className="relative p-4">
