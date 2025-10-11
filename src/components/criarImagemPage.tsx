@@ -152,7 +152,7 @@ export default function CriarImagemPage() {
               </AccordionItem>
 
               <AccordionItem value="item-2" disabled={!prompt}>
-                <AccordionTrigger>Passo 2: Gere a imagem</AccordionTrigger>
+                <AccordionTrigger>Passo 2: Gere a imagem com o prompt</AccordionTrigger>
                 <AccordionContent>
                   <Button onClick={gerarImagem} disabled={loadingImage || !prompt || !!imagemUrl}>
                     {loadingImage ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ImageIcon className="mr-2 h-4 w-4" />}
@@ -162,13 +162,19 @@ export default function CriarImagemPage() {
               </AccordionItem>
 
               <AccordionItem value="item-3" disabled={!imagemUrl}>
-                <AccordionTrigger>Passo 3: Salve sua criação</AccordionTrigger>
+                <AccordionTrigger>Passo 3: Gere a imagem com a frase</AccordionTrigger>
                 <AccordionContent>
                   <Button onClick={salvarImagem} disabled={loadingSalvar || !!publicUrl} variant="secondary">
                     {loadingSalvar ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
                     Salvar Imagem
                   </Button>
-                  {publicUrl && <p className="text-sm text-green-500 mt-2">Imagem salva com sucesso!</p>}
+                  {publicUrl && (
+                    <img
+                      src={publicUrl}
+                      alt="Imagem gerada com o texto escolhido"
+                      className="mt-4 border rounded shadow"
+                    />
+                  )}
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
