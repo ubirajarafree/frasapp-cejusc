@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Frase } from "@/lib/types";
 import { supabase } from "@/lib/supabase";
+import { Button } from "@/components/ui/button";
 
 export default function FraseGallery() {
   const [frases, setFrases] = useState<Frase[]>([]);
@@ -37,7 +38,7 @@ export default function FraseGallery() {
             onClick={() => handleSelecionar(frase)}
             className={`masonry-item cursor-pointer p-6 rounded-xl border-2 transition-all ${
               fraseSelecionada?.id === frase.id
-                ? "border-blue-600 bg-blue-50"
+                ? "border-gray-600 bg-gray-100"
                 : "border-gray-300 bg-white"
             }`}
           >
@@ -53,12 +54,12 @@ export default function FraseGallery() {
 
       {fraseSelecionada && (
         <div className="fixed bottom-6 right-6">
-          <button
+          <Button
             onClick={() => router.push(`/criar-imagem?id=${fraseSelecionada.id}`)}
-            className="bg-blue-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-blue-700 transition"
+            className="shadow-lg text-2xl px-8 py-6"
           >
             Continuar
-          </button>
+          </Button>
         </div>
       )}
     </div>

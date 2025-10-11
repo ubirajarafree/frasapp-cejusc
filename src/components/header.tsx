@@ -11,7 +11,7 @@ export function Header() {
       <div className="container flex items-center">
         <div className="m-4 md:flex gap-6 items-center">
           <Link href="/" className="flex items-center space-x-2">
-            <Sparkles className="h-6 w-6 text-primary" />
+            
             <span className="font-bold text-2xl">
               FrasApp
             </span>
