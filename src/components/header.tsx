@@ -8,15 +8,15 @@ import { Menu, Sparkles } from "lucide-react";
 export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 items-center">
-        <div className="mr-4 hidden md:flex">
-          <Link href="/" className="mr-6 flex items-center space-x-2">
+      <div className="container flex items-center">
+        <div className="m-4 md:flex gap-6 items-center">
+          <Link href="/" className="flex items-center space-x-2">
             <Sparkles className="h-6 w-6 text-primary" />
-            <span className="hidden font-bold sm:inline-block">
+            <span className="font-bold text-2xl">
               FrasApp
             </span>
           </Link>
-          <nav className="flex items-center space-x-6 text-sm font-medium">
+          <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
             <Link href="/selecione-uma-frase">Frases</Link>
             <Link href="/nova-frase">Nova Frase</Link>
           </nav>
@@ -33,7 +33,7 @@ export function Header() {
               <SheetTitle className="sr-only">
                 Menu de Navegação
               </SheetTitle>
-              <nav className="grid gap-6 text-lg font-medium mt-8">
+              <nav className="grid gap-6 text-lg font-medium mt-8 ml-4">
                 <Link href="/selecione-uma-frase" className="hover:text-foreground/80">Frases</Link>
                 <Link href="/nova-frase" className="hover:text-foreground/80">Nova Frase</Link>
               </nav>
