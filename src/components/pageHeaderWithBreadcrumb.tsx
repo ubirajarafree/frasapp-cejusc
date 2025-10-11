@@ -1,7 +1,3 @@
-"use client";
-
-import { Fragment } from "react";
-
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -10,9 +6,9 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import React from "react";
+import { BbotaoVoltar } from "./botaoVoltar";
 
 interface Segment {
   label: string;
@@ -25,16 +21,8 @@ interface PageHeaderWithBreadcrumbProps {
 
 export function PageHeaderWithBreadcrumb({ segments }: PageHeaderWithBreadcrumbProps) {
   return (
-    <div className="container mx-auto p-4 md:p-8 flex items-center gap-4">
-      <Button
-        variant="outline"
-        size="icon"
-        className="h-8 w-8"
-        onClick={() => window.history.back()}
-      >
-        <ArrowLeft className="h-4 w-4" />
-        <span className="sr-only">Voltar</span>
-      </Button>
+    <div className="container flex items-center gap-4 p-4 md:p-8">
+      <BbotaoVoltar />
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -43,7 +31,7 @@ export function PageHeaderWithBreadcrumb({ segments }: PageHeaderWithBreadcrumbP
             </BreadcrumbLink>
           </BreadcrumbItem>
           {segments.map((segment, index) => (
-            <Fragment key={segment.label}>
+            <React.Fragment key={segment.label}>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 {index === segments.length - 1 ? (
@@ -54,7 +42,7 @@ export function PageHeaderWithBreadcrumb({ segments }: PageHeaderWithBreadcrumbP
                   </BreadcrumbLink>
                 )}
               </BreadcrumbItem>
-            </Fragment>
+            </React.Fragment>
           ))}
         </BreadcrumbList>
       </Breadcrumb>
