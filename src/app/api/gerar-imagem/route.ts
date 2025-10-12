@@ -101,7 +101,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Falha ao registrar imagem" }, { status: 500 });
     }
 
-    return NextResponse.json({ url: publicUrl });
+    return NextResponse.json({ url: publicUrl, file: filePath });
   } catch (err) {
     console.error("Erro geral:", err);
     return NextResponse.json({ error: "Erro interno" }, { status: 500 });

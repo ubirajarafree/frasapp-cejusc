@@ -18,6 +18,7 @@ export default function CriarImagemPage() {
   const [prompt, setPrompt] = useState("");
   const [imagemUrl, setImagemUrl] = useState("");
   const [publicUrl, setPublicUrl] = useState("");
+  const [fileInfo, setFileInfo] = useState<{ url: string; file: string } | null>(null);
   const [loadingPrompt, setLoadingPrompt] = useState(false);
   const [loadingImage, setLoadingImage] = useState(false);
   const [loadingSalvar, setLoadingSalvar] = useState(false);
@@ -103,6 +104,10 @@ export default function CriarImagemPage() {
         toast.success("Sua imagem final foi gerada com sucesso.");
         console.log("URL pública:", data.url);
         setPublicUrl(data.url);
+        setFileInfo({
+          url: data.url,
+          file: data.file,
+        });
       } else {
         console.error("Erro ao salvar:", data.error);
         toast.error(data.error || "Não foi possível salvar a imagem.");
@@ -116,7 +121,7 @@ export default function CriarImagemPage() {
   };
 
   const handleDownload = async () => {
-    if (!publicUrl) return;
+    if (!publicUrl || !fileInfo) return;
 
     try {
       const response = await fetch(publicUrl);
@@ -133,6 +138,20 @@ export default function CriarImagemPage() {
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
       toast.success("Download iniciado!");
+
+      // setTimeout(async () => {
+      //   await fetch("/api/deletar-imagem", {
+      //     method: "POST",
+      //     headers: { "Content-Type": "application/json" },
+      //     body: JSON.stringify({ filePath: fileInfo.file }),
+      //   });
+      // }, 10000);
+
+      localStorage.setItem("frasapp-delete", JSON.stringify({
+        filePath: fileInfo.file,
+        timestamp: Date.now()
+      }));
+
     } catch (error) {
       console.error("Erro ao baixar imagem:", error);
       toast.error("Não foi possível baixar a imagem.");
