@@ -42,15 +42,39 @@ export default function CriarImagemPage() {
     fetchFrase();
   }, [id]);
 
+  // const sugerirPrompt = async () => {
+  //   if (!frase?.conteudo) return;
+  //   setLoadingPrompt(true);
+  //   try {
+  //     const textPrompt = `Baseado na frase "${frase.conteudo}", sugira um prompt em português, detalhado e artístico para gerar uma imagem. O prompt deve ter no máximo 4 linhas e focar em um estilo visual específico (ex: "cinematic, 4k, photorealistic, vibrant colors"). Retorne apenas o prompt.`;
+
+  //     const endpoint = `https://text.pollinations.ai/${encodeURIComponent(
+  //       textPrompt
+  //     )}?temperature=0.7`;
+
+  //     const response = await fetch(endpoint);
+  //     const texto = await response.text();
+  //     setPrompt(texto);
+  //   } catch (error) {
+  //     console.error("Erro ao sugerir prompt:", error);
+  //     toast.error("Não foi possível sugerir um prompt.");
+  //   } finally {
+  //     setLoadingPrompt(false);
+  //   }
+  // };
+
   const sugerirPrompt = async () => {
     if (!frase?.conteudo) return;
     setLoadingPrompt(true);
+
     try {
+      const seed = Math.floor(Math.random() * 10000); // número aleatório entre 0 e 9999
+
       const textPrompt = `Baseado na frase "${frase.conteudo}", sugira um prompt em português, detalhado e artístico para gerar uma imagem. O prompt deve ter no máximo 4 linhas e focar em um estilo visual específico (ex: "cinematic, 4k, photorealistic, vibrant colors"). Retorne apenas o prompt.`;
 
       const endpoint = `https://text.pollinations.ai/${encodeURIComponent(
         textPrompt
-      )}?temperature=0.7`;
+      )}?temperature=0.7&seed=${seed}`;
 
       const response = await fetch(endpoint);
       const texto = await response.text();
@@ -62,6 +86,7 @@ export default function CriarImagemPage() {
       setLoadingPrompt(false);
     }
   };
+
 
   const gerarImagem = async () => {
     if (!prompt) return;
@@ -217,7 +242,7 @@ export default function CriarImagemPage() {
                     rows={6}
                     disabled={loadingPrompt || loadingImage}
                   />
-                  <Button onClick={sugerirPrompt} disabled={loadingPrompt || !frase?.conteudo || loadingImage || !!prompt}>
+                  <Button onClick={sugerirPrompt} disabled={loadingPrompt || !frase?.conteudo || loadingImage}>
                     {loadingPrompt ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
                     Sugerir com IA
                   </Button>
