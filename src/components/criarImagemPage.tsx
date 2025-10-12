@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Loader2, Wand2, Image as ImageIcon, Save, ArrowLeft, Download } from "lucide-react";
+import { Loader2, Wand2, Image as ImageIcon, Save, ArrowLeft, Download, RefreshCcw } from "lucide-react";
 import { Toaster, toast } from "sonner";
 
 export default function CriarImagemPage() {
@@ -49,7 +49,7 @@ export default function CriarImagemPage() {
 
       const endpoint = `https://text.pollinations.ai/${encodeURIComponent(
         textPrompt
-      )}`;
+      )}?temperature=0.7`;
 
       const response = await fetch(endpoint);
       const texto = await response.text();
@@ -71,9 +71,14 @@ export default function CriarImagemPage() {
       const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(
         prompt
       )}?enhance=true&nologo=true`;
-      setImagemUrl(url);
-      setLoadingImage(false);
-      toast.success("Imagem gerada. Agora você pode salvá-la.");
+
+      if (url) {
+        setImagemUrl(url);
+        setLoadingImage(false);
+        toast.success("Imagem gerada. Agora você pode seguir para a próxima etapa.");
+      } else {
+        toast.error("Não foi possível gerar a imagem.");
+      }
     }, 4000); // Aumentei o tempo para uma simulação mais realista
   };
 
@@ -93,7 +98,6 @@ export default function CriarImagemPage() {
       });
 
       const data = await response.json();
-
 
       if (response.ok) {
         toast.success("Sua imagem final foi gerada com sucesso.");
@@ -142,24 +146,50 @@ export default function CriarImagemPage() {
       <div className="container mx-auto p-4 md:p-8">
         <Card className="max-w-3xl mx-auto">
           <CardContent className="p-6">
-            <div className="relative w-full aspect-square border border-dashed rounded-lg flex items-center justify-center text-center p-6 overflow-hidden bg-gray-100 dark:bg-gray-900">
-              {imagemUrl ? (
-                <img
-                  src={imagemUrl}
-                  alt="Imagem gerada"
-                  className="absolute inset-0 w-full h-full object-cover z-10"
-                />
-              ) : (
-                <ImageIcon className="h-16 w-16 text-gray-400" />
-              )}
-              <p className="absolute bottom-4 left-4 right-4 bg-black bg-opacity-50 text-white text-xl md:text-2xl font-semibold p-4 rounded-md z-20">
-                {frase?.conteudo || "Carregando frase..."}
-              </p>
+            <div className="flex items-center flex-col md:flex-row justify-between gap-4">
+              <div className={`
+                relative 
+                w-full 
+                md:w-1/2 
+                ${imagemUrl ? 'aspect-square' : 'h-48 md:h-64'}
+                border-2 
+                border-gray-400 
+                border-dashed 
+                rounded-lg 
+                flex 
+                items-center 
+                justify-center
+                text-center 
+                p-4 
+                overflow-hidden 
+                bg-gray-100 
+                dark:bg-gray-900
+                `}>
+                {imagemUrl ? (
+                  <img
+                    src={imagemUrl}
+                    alt="Imagem gerada"
+                    className="absolute inset-0 w-full h-full object-cover z-10"
+                  />
+                ) : (
+                  <ImageIcon className="h-16 w-16 text-gray-400" />
+                )}
+              </div>
+              <div className="flex w-full md:w-1/2">
+                <p className="w-full bg-black bg-opacity-50 text-white text-base md:text-xl font-semibold p-4 rounded-md z-20">
+                  <span className="block text-muted text-xs font-normal mb-2">Gere a imagem com a frase escolhida</span>
+                  {frase?.conteudo || "Carregando frase..."}
+                </p>
+              </div>
             </div>
-
             <Accordion type="single" collapsible className="w-full mt-6" defaultValue="item-1">
               <AccordionItem value="item-1">
-                <AccordionTrigger>Passo 1: Crie um prompt</AccordionTrigger>
+                <AccordionTrigger>
+                  <p className="flex items-center gap-2">
+                    <span className="flex items-center justify-center w-8 h-8 rounded-full bg-green-600 text-white">1</span>
+                    <span>Crie um prompt</span>
+                  </p>
+                </AccordionTrigger>
                 <AccordionContent className="space-y-4">
                   <Textarea
                     placeholder="Descreva a imagem que você quer gerar..."
@@ -176,21 +206,61 @@ export default function CriarImagemPage() {
               </AccordionItem>
 
               <AccordionItem value="item-2" disabled={!prompt}>
-                <AccordionTrigger>Passo 2: Gere a imagem com o prompt</AccordionTrigger>
+                <AccordionTrigger>
+                  <p className="flex items-center gap-2">
+                    <span className="flex items-center justify-center w-8 h-8 rounded-full bg-pink-600 text-white">2</span>
+                    <span>Gere a imagem</span>
+                  </p>
+                </AccordionTrigger>
                 <AccordionContent>
+                  <span className="flex mb-4">Com o prompt criado, é hora de gerar a imagem. Clique no botão abaixo para gerar a imagem.</span>
                   <Button onClick={gerarImagem} disabled={loadingImage || !prompt || !!imagemUrl}>
                     {loadingImage ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ImageIcon className="mr-2 h-4 w-4" />}
                     Gerar Imagem
                   </Button>
+                  <div className={`
+                    mt-4
+                    relative 
+                    w-1/2 
+                    ${imagemUrl ? 'aspect-square' : 'h-48 md:h-64'}
+                    border-2 
+                    border-gray-400 
+                    border-dashed 
+                    rounded-lg 
+                    flex 
+                    items-center 
+                    justify-center
+                    text-center 
+                    p-4 
+                    overflow-hidden 
+                    bg-gray-100 
+                    dark:bg-gray-900
+                    `}>
+                    {imagemUrl ? (
+                      <img
+                        src={imagemUrl}
+                        alt="Imagem gerada"
+                        className="absolute inset-0 w-full h-full object-cover z-10"
+                      />
+                    ) : (
+                      <ImageIcon className="h-16 w-16 text-gray-400" />
+                    )}
+                  </div>
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-3" disabled={!imagemUrl}>
-                <AccordionTrigger>Passo 3: Gere a imagem com a frase</AccordionTrigger>
+                <AccordionTrigger>
+                  <p className="flex items-center gap-2">
+                    <span className="flex items-center justify-center w-8 h-8 rounded-full bg-orange-600 text-white">3</span>
+                    <span>Combine a imagem</span>
+                  </p>
+                </AccordionTrigger>
                 <AccordionContent>
+                  <span className="flex mb-4">Agora que você já tem a imagem, clique no botão abaixo para combiná-la com a frase escolhida e gerar a imagem final.</span>
                   <Button onClick={salvarImagem} disabled={loadingSalvar || !!publicUrl} variant="default">
                     {loadingSalvar ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
-                    Combinar Imagem + Frase
+                    Combinar Imagem
                   </Button>
                   {publicUrl && (
                     <div className="relative mt-4">
@@ -215,7 +285,17 @@ export default function CriarImagemPage() {
               </AccordionItem>
             </Accordion>
 
-            <div className="mt-8 flex justify-end">
+            <div className="mt-8 flex items-center justify-between gap-2">
+              
+              <Button variant="outline" onClick={() => {
+                  setPrompt("");
+                  setImagemUrl("");
+                  setPublicUrl("");
+                }}>
+                <RefreshCcw className="mr-2 h-4 w-4" />
+                Limpar
+              </Button>
+
               <Button variant="outline" onClick={() => window.history.back()}>
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Voltar
