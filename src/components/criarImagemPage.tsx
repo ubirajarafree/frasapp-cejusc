@@ -186,7 +186,7 @@ export default function CriarImagemPage() {
               <AccordionItem value="item-1">
                 <AccordionTrigger>
                   <p className="flex items-center gap-2">
-                    <span className="flex items-center justify-center w-8 h-8 rounded-full bg-green-600 text-white">1</span>
+                    <span className="flex items-center justify-center w-8 h-8 rounded-full bg-black text-white">1</span>
                     <span>Crie um prompt</span>
                   </p>
                 </AccordionTrigger>
@@ -208,43 +208,65 @@ export default function CriarImagemPage() {
               <AccordionItem value="item-2" disabled={!prompt}>
                 <AccordionTrigger>
                   <p className="flex items-center gap-2">
-                    <span className="flex items-center justify-center w-8 h-8 rounded-full bg-pink-600 text-white">2</span>
+                    <span className="flex items-center justify-center w-8 h-8 rounded-full bg-black text-white">2</span>
                     <span>Gere a imagem</span>
                   </p>
                 </AccordionTrigger>
                 <AccordionContent>
-                  <span className="flex mb-4">Com o prompt criado, é hora de gerar a imagem. Clique no botão abaixo para gerar a imagem.</span>
-                  <Button onClick={gerarImagem} disabled={loadingImage || !prompt || !!imagemUrl}>
-                    {loadingImage ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ImageIcon className="mr-2 h-4 w-4" />}
-                    Gerar Imagem
-                  </Button>
-                  <div className={`
-                    mt-4
-                    relative 
-                    w-1/2 
-                    ${imagemUrl ? 'aspect-square' : 'h-48 md:h-64'}
-                    border-2 
-                    border-gray-400 
-                    border-dashed 
-                    rounded-lg 
-                    flex 
-                    items-center 
-                    justify-center
-                    text-center 
-                    p-4 
-                    overflow-hidden 
-                    bg-gray-100 
-                    dark:bg-gray-900
-                    `}>
-                    {imagemUrl ? (
-                      <img
-                        src={imagemUrl}
-                        alt="Imagem gerada"
-                        className="absolute inset-0 w-full h-full object-cover z-10"
-                      />
-                    ) : (
-                      <ImageIcon className="h-16 w-16 text-gray-400" />
-                    )}
+                  {!imagemUrl ? (
+                    <>
+                      <span className="flex mb-4">Com o prompt criado, é hora de gerar a imagem. Clique no botão abaixo para gerar a imagem.</span>
+                      <Button onClick={gerarImagem} disabled={loadingImage || !prompt || !!imagemUrl}>
+                        {loadingImage ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ImageIcon className="mr-2 h-4 w-4" />}
+                        Gerar Imagem
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <span className="flex mb-4">Com o prompt criado, é hora de gerar a imagem. Clique no botão abaixo para gerar a imagem.</span>
+                      <Button onClick={gerarImagem} disabled={loadingImage || !prompt || !!imagemUrl}>
+                        {loadingImage ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ImageIcon className="mr-2 h-4 w-4" />}
+                        Gerar Imagem
+                      </Button>
+                      <span className="flex mt-4">Ok. Imagem gerada. Siga para a próxima etapa.</span>
+                    </>
+                  )}
+                  <div className="flex items-center flex-col md:flex-row justify-between gap-4">
+                    <div className={`
+                      mt-4
+                      relative 
+                      w-full 
+                      md:w-1/2 
+                      ${imagemUrl ? 'aspect-square' : 'h-48 md:h-64'}
+                      border-2 
+                      border-gray-400 
+                      border-dashed 
+                      rounded-lg 
+                      flex 
+                      items-center 
+                      justify-center
+                      text-center 
+                      p-4 
+                      overflow-hidden 
+                      bg-gray-100 
+                      dark:bg-gray-900
+                      `}>
+                      {imagemUrl ? (
+                        <img
+                          src={imagemUrl}
+                          alt="Imagem gerada"
+                          className="absolute inset-0 w-full h-full object-cover z-10"
+                        />
+                      ) : (
+                        <ImageIcon className="h-16 w-16 text-gray-400" />
+                      )}
+                    </div>
+                    <div className="flex w-full md:w-1/2">
+                      <p className="w-full bg-black bg-opacity-50 text-white text-base md:text-xl font-semibold p-4 rounded-md z-20">
+                        <span className="block text-muted text-xs font-normal mb-2">Combine a imagem com a frase escolhida</span>
+                        {frase?.conteudo || "Carregando frase..."}
+                      </p>
+                    </div>
                   </div>
                 </AccordionContent>
               </AccordionItem>
@@ -252,7 +274,7 @@ export default function CriarImagemPage() {
               <AccordionItem value="item-3" disabled={!imagemUrl}>
                 <AccordionTrigger>
                   <p className="flex items-center gap-2">
-                    <span className="flex items-center justify-center w-8 h-8 rounded-full bg-orange-600 text-white">3</span>
+                    <span className="flex items-center justify-center w-8 h-8 rounded-full bg-black text-white">3</span>
                     <span>Combine a imagem</span>
                   </p>
                 </AccordionTrigger>
@@ -286,12 +308,12 @@ export default function CriarImagemPage() {
             </Accordion>
 
             <div className="mt-8 flex items-center justify-between gap-2">
-              
+
               <Button variant="outline" onClick={() => {
-                  setPrompt("");
-                  setImagemUrl("");
-                  setPublicUrl("");
-                }}>
+                setPrompt("");
+                setImagemUrl("");
+                setPublicUrl("");
+              }}>
                 <RefreshCcw className="mr-2 h-4 w-4" />
                 Limpar
               </Button>
