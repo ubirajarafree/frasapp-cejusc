@@ -341,7 +341,7 @@ export default function CriarImagemPage() {
                 </AccordionTrigger>
                 <AccordionContent>
                   <span className="flex mb-4">Agora que você já tem a imagem, clique no botão abaixo para combiná-la com a frase escolhida e gerar a imagem final.</span>
-                  <Button onClick={salvarImagem} disabled={loadingSalvar || !!publicUrl} variant="default">
+                  <Button onClick={salvarImagem} disabled={loadingSalvar} variant="default">
                     {loadingSalvar ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
                     Combinar Imagem
                   </Button>
