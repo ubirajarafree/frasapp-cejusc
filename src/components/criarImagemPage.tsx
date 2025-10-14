@@ -94,18 +94,20 @@ export default function CriarImagemPage() {
     // A API de imagem pode ser lenta, então um timeout ajuda a simular o carregamento
     // e evitar que o usuário pense que a página travou.
     setTimeout(() => { // Simula o tempo de geração
+      const seed = Math.floor(Math.random() * 10000); // número aleatório entre 0 e 9999
+
       const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(
         prompt
-      )}?enhance=true&nologo=true`;
+      )}?enhance=true&nologo=true&seed=${seed}`;
 
       if (url) {
         setImagemUrl(url);
-        setLoadingImage(false);
+        //setLoadingImage(false);
         toast.success("Imagem gerada. Agora você pode seguir para a próxima etapa.");
       } else {
         toast.error("Não foi possível gerar a imagem.");
       }
-    }, 4000); // Aumentei o tempo para uma simulação mais realista
+    }, 8000); // Aumentei o tempo para uma simulação mais realista
   };
 
   const salvarImagem = async () => {
@@ -126,7 +128,7 @@ export default function CriarImagemPage() {
       const data = await response.json();
 
       if (response.ok) {
-        toast.success("Sua imagem final foi gerada com sucesso.");
+        //toast.success("Sua imagem final foi gerada com sucesso.");
         console.log("URL pública:", data.url);
         setPublicUrl(data.url);
         setFileInfo({
@@ -141,7 +143,10 @@ export default function CriarImagemPage() {
       console.error("Erro geral:", error);
       toast.error("Ocorreu um erro de rede.");
     } finally {
-      setLoadingSalvar(false);
+      //setLoadingSalvar(false);
+      setTimeout(() => {
+        toast.success("Clique em Baixar para salvar a imagem.");
+      }, 4000);
     }
   };
 
@@ -266,7 +271,7 @@ export default function CriarImagemPage() {
                   {!imagemUrl ? (
                     <>
                       <span className="flex mb-4">Com o prompt criado, é hora de gerar a imagem. Clique no botão abaixo para gerar a imagem.</span>
-                      <Button onClick={gerarImagem} disabled={loadingImage || !prompt || !!imagemUrl}>
+                      <Button onClick={gerarImagem} disabled={loadingImage || !prompt}>
                         {loadingImage ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ImageIcon className="mr-2 h-4 w-4" />}
                         Gerar Imagem
                       </Button>
@@ -274,7 +279,7 @@ export default function CriarImagemPage() {
                   ) : (
                     <>
                       <span className="flex mb-4">Com o prompt criado, é hora de gerar a imagem. Clique no botão abaixo para gerar a imagem.</span>
-                      <Button onClick={gerarImagem} disabled={loadingImage || !prompt || !!imagemUrl}>
+                      <Button onClick={gerarImagem} disabled={loadingImage || !prompt}>
                         {loadingImage ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ImageIcon className="mr-2 h-4 w-4" />}
                         Gerar Imagem
                       </Button>
