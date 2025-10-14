@@ -40,11 +40,12 @@ export async function POST(req: Request) {
 
     // 2. Criar SVG com a frase
     const svgText = `
-      <svg width="${width}" height="${height}">
+      <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
         <style>
           text {
             font-size: ${fontSize}px;
             fill: white;
+            font-family: Arial, sans-serif;
             fill-opacity: 1;
             text-anchor: middle;
           }
