@@ -5,6 +5,8 @@ export enum Categoria {
   Espiritualidade = "Espiritualidade",
   Amor = "Amor",
   Gratidao = "Gratidão",
+  Direito = "Direito",
+  Outros = "Outros",
 }
 
 export type Frase = {
