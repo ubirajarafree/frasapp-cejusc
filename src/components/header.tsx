@@ -7,13 +7,13 @@ import { Menu, Sparkles } from "lucide-react";
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex items-center">
-        <div className="m-4 md:flex gap-6 items-center">
+    <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="w-full flex items-center justify-center">
+        <div className="m-4 w-full flex items-center justify-between gap-6">
           <Link href="/" className="flex items-center space-x-2">
             
-            <span className="font-bold text-2xl">
-              FrasApp
+            <span className="font-bold text-lg md:text-2xl">
+              FrasApp | Cejusc
             </span>
           </Link>
           <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
