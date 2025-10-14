@@ -57,7 +57,7 @@ export default function FraseGallery() {
                 : "border-gray-300 bg-white"
             }`}
           >
-            <p className="text-3xl font-semibold leading-snug">{frase.conteudo}</p>
+            <p className="text-lg md:text-2xl lg:text-3xl font-semibold leading-snug">{frase.conteudo}</p>
             {frase.autor && (
               <p className="mt-2 text-right italic text-sm text-gray-500">
                 — {frase.autor}
