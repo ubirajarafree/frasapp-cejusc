@@ -51,15 +51,16 @@ export default function FraseGallery() {
           <div
             key={frase.id}
             onClick={() => handleSelecionar(frase)}
-            className={`masonry-item cursor-pointer p-6 rounded-xl border-2 transition-all ${
+            className={`masonry-item cursor-pointer p-3 md:p-6 rounded-xl border-2 transition-all ${
               fraseSelecionada?.id === frase.id
                 ? "border-gray-600 bg-gray-100"
                 : "border-gray-300 bg-white"
             }`}
           >
+            <span className="flex text-xs lg::text-sm bg-gray-100 px-3 py-1 rounded-full mb-2 justify-self-end">{frase.categoria}</span>
             <p className="text-lg md:text-2xl lg:text-3xl font-semibold leading-snug">{frase.conteudo}</p>
             {frase.autor && (
-              <p className="mt-2 text-right italic text-sm text-gray-500">
+              <p className="mt-2 text-right italic text-sm md:text-base text-gray-500">
                 — {frase.autor}
               </p>
             )}
