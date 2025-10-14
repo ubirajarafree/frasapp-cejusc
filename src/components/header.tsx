@@ -13,7 +13,7 @@ export function Header() {
           <Link href="/" className="flex items-center space-x-2">
             
             <span className="font-bold text-lg md:text-2xl">
-              FrasApp | Cejusc
+              FrasApp Cejusc
             </span>
           </Link>
           <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
