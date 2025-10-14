@@ -94,11 +94,11 @@ export default function CriarImagemPage() {
     // A API de imagem pode ser lenta, então um timeout ajuda a simular o carregamento
     // e evitar que o usuário pense que a página travou.
     setTimeout(() => { // Simula o tempo de geração
-      const seed = Math.floor(Math.random() * 10000); // número aleatório entre 0 e 9999
+      const seed = Math.floor(Math.random() * 100); // número aleatório entre 0 e 9999
 
       const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(
         prompt
-      )}?enhance=true&nologo=true&seed=${seed}`;
+      )}?model=flux&nologo=true&seed=${seed}`;
 
       if (url) {
         setImagemUrl(url);
@@ -107,7 +107,7 @@ export default function CriarImagemPage() {
       } else {
         toast.error("Não foi possível gerar a imagem.");
       }
-    }, 8000); // Aumentei o tempo para uma simulação mais realista
+    }, 2000); // Aumentei o tempo para uma simulação mais realista
   };
 
   const salvarImagem = async () => {
@@ -191,7 +191,7 @@ export default function CriarImagemPage() {
 
   return (
     <>
-      <Toaster richColors position="top-center" />
+      <Toaster />
       <div className="container mx-auto p-4 md:p-8">
         <Card className="max-w-3xl mx-auto">
           <CardContent className="p-6">
