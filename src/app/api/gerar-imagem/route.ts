@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import sharp from "sharp";
 import { supabase } from "@/lib/supabase";
-import path from "path";
-import fs from "fs/promises";
 
 
 export async function POST(req: Request) {
@@ -79,8 +77,11 @@ export async function POST(req: Request) {
     
     // 3. Compor imagem com o texto e logo
 
-    const logoPath = path.join(process.cwd(), "public", "logo.png");
-    const logoBuffer = await fs.readFile(logoPath);
+    const logoResponse = await fetch(
+        process.env.NEXT_PUBLIC_BASE_URL + "/logo.png"
+      );
+    const logoBuffer = Buffer.from(await logoResponse.arrayBuffer());
+
     
     const margin = 20;
     
