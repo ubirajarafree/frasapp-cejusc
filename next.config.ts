@@ -1,9 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  experimental: {
-    turbo: {},
-  },
+  webpack: (config) => ({
+    ...config,
+    externals: [
+      ...config.externals,
+      {
+        sharp: "commonjs sharp",
+      },
+    ],
+  }),
 };
 
 export default nextConfig;
