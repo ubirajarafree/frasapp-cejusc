@@ -89,8 +89,8 @@ export async function POST(req: Request) {
     const { width: logoWidth, height: logoHeight } = await sharp(logoBuffer).metadata();
     
     // Calcula posição com margem (width e height da imagem principal)
-    const logoLeft = width - logoWidth - margin;
-    const logoTop = height - logoHeight - margin;
+    const logoLeft = width - logoWidth! - margin;
+    const logoTop = height - logoHeight! - margin;
 
     const finalImage = await imageSharp
       .composite([
