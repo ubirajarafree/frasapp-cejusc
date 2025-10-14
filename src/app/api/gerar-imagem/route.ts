@@ -31,6 +31,8 @@ export async function POST(req: Request) {
       return acc;
     }, []);
 
+    console.log("Linhas da frase:", linhas);
+
     const fontSize = Math.floor(width / 18);
     const lineHeight = Math.floor(width / 18) * 1.2; // mesmo que font-size * 1.2
     const totalHeight = linhas.length * lineHeight;
