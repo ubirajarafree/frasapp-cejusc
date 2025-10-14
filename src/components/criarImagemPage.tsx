@@ -206,7 +206,7 @@ export default function CriarImagemPage() {
                 text-center 
                 p-4 
                 overflow-hidden 
-                bg-gray-100 
+                ${imagemUrl ? 'bg-black' : 'bg-gray-100'}
                 dark:bg-gray-900
                 `}>
                 {imagemUrl ? (
@@ -214,13 +214,19 @@ export default function CriarImagemPage() {
                     src={imagemUrl}
                     alt="Imagem gerada"
                     className="absolute inset-0 w-full h-full object-cover z-10"
+                    onLoad={() => setLoadingImage(false)}
                   />
                 ) : (
                   <ImageIcon className="h-16 w-16 text-gray-400" />
                 )}
+                {loadingImage && (
+                  <div className="absolute inset-0 bg-black flex items-center justify-center z-20">
+                    <Loader2 className="h-12 w-12 text-white animate-spin" />
+                  </div>
+                )}
               </div>
               <div className="flex w-full md:w-1/2">
-                <p className="w-full bg-black bg-opacity-50 text-white text-base md:text-xl font-semibold p-4 rounded-md z-20">
+                <p className="w-full bg-black text-white text-base md:text-xl font-semibold p-4 rounded-md z-20">
                   <span className="block text-muted text-xs font-normal mb-2">Gere a imagem com a frase escolhida</span>
                   {frase?.conteudo || "Carregando frase..."}
                 </p>
@@ -292,7 +298,7 @@ export default function CriarImagemPage() {
                       text-center 
                       p-4 
                       overflow-hidden 
-                      bg-gray-100 
+                      ${imagemUrl ? 'bg-black' : 'bg-gray-100'}
                       dark:bg-gray-900
                       `}>
                       {imagemUrl ? (
@@ -300,13 +306,19 @@ export default function CriarImagemPage() {
                           src={imagemUrl}
                           alt="Imagem gerada"
                           className="absolute inset-0 w-full h-full object-cover z-10"
+                          onLoad={() => setLoadingImage(false)}
                         />
                       ) : (
                         <ImageIcon className="h-16 w-16 text-gray-400" />
                       )}
+                      {loadingImage && (
+                        <div className="absolute inset-0 bg-black flex items-center justify-center z-20">
+                          <Loader2 className="h-12 w-12 text-white animate-spin" />
+                        </div>
+                      )}
                     </div>
                     <div className="flex w-full md:w-1/2">
-                      <p className="w-full bg-black bg-opacity-50 text-white text-base md:text-xl font-semibold p-4 rounded-md z-20">
+                      <p className="w-full bg-black text-white text-base md:text-xl font-semibold p-4 rounded-md z-20">
                         <span className="block text-muted text-xs font-normal mb-2">Combine a imagem com a frase escolhida</span>
                         {frase?.conteudo || "Carregando frase..."}
                       </p>
@@ -328,25 +340,47 @@ export default function CriarImagemPage() {
                     {loadingSalvar ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
                     Combinar Imagem
                   </Button>
-                  {publicUrl && (
-                    <div className="relative mt-4">
-                      <img
-                        src={publicUrl}
-                        alt="Imagem gerada com o texto escolhido"
-                        className="border rounded shadow"
-                      />
-                      <Button
-                        variant="default"
-                        className="absolute top-2 right-2 bg-black text-white hover:bg-gray-900 shadow-lg flex items-center gap-3"
-                        style={{ zIndex: 30 }}
-                        onClick={handleDownload}
-                      >
-                        Baixar
-                        <Download className="h-5 w-5" />
-                      </Button>
-
-                    </div>
-                  )}
+                  <div className={`
+                    mt-4 
+                    relative 
+                    w-full 
+                    ${publicUrl ? 'aspect-square' : 'h-48 md:h-64'}
+                    ${publicUrl ? 'border-none' : 'border-2 border-gray-400  border-dashed rounded-lg p-4'}
+                    flex 
+                    items-center 
+                    justify-center
+                    text-center 
+                    overflow-hidden 
+                    ${publicUrl ? 'bg-black' : 'bg-gray-100'}
+                    dark:bg-gray-900
+                    `}>
+                    {publicUrl ? (
+                      <>
+                        <img
+                          src={publicUrl}
+                          alt="Imagem gerada com o texto escolhido"
+                          className="absolute inset-0 w-full h-full object-cover z-10"
+                          onLoad={() => setLoadingSalvar(false)}
+                        />
+                        <Button
+                          variant="default"
+                          className="absolute top-2 right-2 bg-black text-white hover:bg-gray-900 shadow-lg flex items-center gap-3"
+                          style={{ zIndex: 30 }}
+                          onClick={handleDownload}
+                        >
+                          Baixar
+                          <Download className="h-5 w-5" />
+                        </Button>
+                      </>
+                    ) : (
+                      <ImageIcon className="h-16 w-16 text-gray-400" />
+                    )}
+                    {loadingSalvar && (
+                      <div className="absolute inset-0 bg-black flex items-center justify-center z-20">
+                        <Loader2 className="h-12 w-12 text-white animate-spin" />
+                      </div>
+                    )}
+                  </div>
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
@@ -357,12 +391,31 @@ export default function CriarImagemPage() {
                 setPrompt("");
                 setImagemUrl("");
                 setPublicUrl("");
+                if (fileInfo) {
+                  localStorage.setItem("frasapp-delete", JSON.stringify({
+                    filePath: fileInfo.file,
+                    timestamp: Date.now()
+                  }));
+                  setFileInfo(null);
+                }
               }}>
                 <RefreshCcw className="mr-2 h-4 w-4" />
                 Limpar
               </Button>
 
-              <Button variant="outline" onClick={() => window.history.back()}>
+              <Button variant="outline" onClick={() => {
+                setPrompt("");
+                setImagemUrl("");
+                setPublicUrl("");
+                if (fileInfo) {
+                  localStorage.setItem("frasapp-delete", JSON.stringify({
+                    filePath: fileInfo.file,
+                    timestamp: Date.now()
+                  }));
+                  setFileInfo(null);
+                }
+                window.history.back();
+                }}>
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Voltar
               </Button>

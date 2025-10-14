@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import sharp from "sharp";
 import { supabase } from "@/lib/supabase";
+import path from "path";
+import fs from "fs/promises";
+
 
 export async function POST(req: Request) {
   try {
@@ -59,15 +62,46 @@ export async function POST(req: Request) {
     `;
 
     // 3. Compor imagem com o texto
+    // const finalImage = await imageSharp
+    //   .composite([
+    //     {
+    //       input: Buffer.from(svgText),
+    //       gravity: "center",
+    //     },
+    //   ])
+    //   .png()
+    //   .toBuffer();
+    
+    // 3. Compor imagem com o texto e logo
+
+    const logoPath = path.join(process.cwd(), "public", "logo.png");
+    const logoBuffer = await fs.readFile(logoPath);
+    
+    const margin = 20;
+    
+    // Pega dimensões do logo
+    const { width: logoWidth, height: logoHeight } = await sharp(logoBuffer).metadata();
+    
+    // Calcula posição com margem (width e height da imagem principal)
+    const logoLeft = width - logoWidth - margin;
+    const logoTop = height - logoHeight - margin;
+
     const finalImage = await imageSharp
       .composite([
         {
           input: Buffer.from(svgText),
-          gravity: "center",
+          gravity: "center", // frase centralizada
+        },
+        {
+          input: logoBuffer,
+          gravity: "southeast", // canto inferior direito
+          left: logoLeft,
+          top: logoTop,
         },
       ])
       .png()
       .toBuffer();
+
 
 
     // 4. Upload para Supabase Storage
