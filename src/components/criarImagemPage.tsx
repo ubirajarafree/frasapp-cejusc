@@ -191,7 +191,7 @@ export default function CriarImagemPage() {
 
   return (
     <>
-      <Toaster />
+      <Toaster richColors position="top-center" />
       <div className="container mx-auto p-4 md:p-8">
         <Card className="max-w-3xl mx-auto">
           <CardContent className="p-6">
