@@ -45,7 +45,7 @@ export async function POST(req: Request) {
           text {
             font-size: ${fontSize}px;
             fill: white;
-            font-family: sans-serif;
+            font-family: 1bffadaabf893a1e-s.7cd81963;
             fill-opacity: 1;
             text-anchor: middle;
           }
